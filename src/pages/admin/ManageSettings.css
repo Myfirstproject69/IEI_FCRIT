@@ -1,0 +1,114 @@
+/* General Admin Page Styles */
+.admin-page-container {
+    padding: 2rem;
+    background-color: #111827;
+    color: #f3f4f6;
+    font-family: 'Inter', sans-serif;
+}
+.admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #374151;
+}
+.admin-header h2 { font-size: 1.5rem; font-weight: 700; }
+
+/* Buttons */
+.btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1.2rem;
+    border: none;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background-color: #3b82f6;
+    color: white;
+}
+.btn-primary:hover { background-color: #2563eb; }
+button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* Form Styles */
+.settings-form {
+    background-color: #1f2937;
+    border-radius: 0.75rem;
+    border: 1px solid #374151;
+}
+.form-section {
+    padding: 1.5rem;
+}
+.form-section + .form-section {
+    border-top: 1px solid #374151;
+}
+.section-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+}
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+}
+.form-group { display: flex; flex-direction: column; }
+.form-group label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    color: #d1d5db;
+}
+input[type="url"], input[type="file"] {
+    background-color: #374151;
+    border: 1px solid #4b5563;
+    color: #f3f4f6;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+}
+input[type="file"] {
+    padding: 0.5rem;
+}
+
+/* Logo Upload Area */
+.logo-upload-area {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 0.5rem;
+}
+.logo-preview {
+    width: 4rem;
+    height: 4rem;
+    object-fit: contain;
+    background-color: #374151;
+    border-radius: 0.5rem;
+    padding: 0.25rem;
+}
+
+.form-footer {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid #374151;
+    background-color: rgba(17, 24, 39, 0.5);
+    text-align: right;
+}
+
+/* Notification */
+.notification {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    padding: 1rem 1.5rem;
+    border-radius: 0.5rem;
+    color: white;
+    z-index: 101;
+}
+.notification.success { background-color: #22c55e; }
+.notification.error { background-color: #ef4444; }
+
+/* Responsive */
+@media (min-width: 768px) {
+    .form-grid { grid-template-columns: 1fr 1fr; }
+}

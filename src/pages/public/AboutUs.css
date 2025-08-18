@@ -1,0 +1,124 @@
+@keyframes fadeIn-stagger {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+@keyframes pulse {
+    50% { opacity: .5; }
+}
+
+.about-us-container {
+    max-width: 56rem;
+    margin: auto;
+    padding: 2rem;
+    animation: fadeIn-stagger 0.5s ease-out forwards;
+}
+
+/* --- Page Header --- */
+.page-header {
+    text-align: center;
+    margin-bottom: 4rem;
+}
+.page-title {
+    font-size: 2.25rem;
+    font-weight: 800;
+    background-image: linear-gradient(to right, #60a5fa, #2dd4bf);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+.page-subtitle {
+    margin-top: 0.5rem;
+    font-size: 1.125rem;
+    color: #94a3b8;
+}
+
+/* --- Content Sections --- */
+.content-section {
+    margin-bottom: 3rem;
+    opacity: 0;
+    animation: fadeIn-stagger 0.8s ease-out forwards;
+}
+.content-section:nth-child(2) { animation-delay: 0.2s; }
+.content-section:nth-child(3) { animation-delay: 0.4s; }
+
+.section-title {
+    font-size: 1.875rem;
+    font-weight: 700;
+    color: #e2e8f0;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #334155;
+}
+.prose-style {
+    color: #cbd5e1;
+    font-size: 1rem;
+    line-height: 1.75;
+    white-space: pre-wrap;
+}
+.prose-style p { margin-bottom: 1rem; }
+.prose-style h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #f1f5f9;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+}
+
+/* --- Vision & Mission Grid --- */
+.info-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    margin-top: 2rem;
+}
+.info-card {
+    background-color: rgba(30, 41, 59, 0.5);
+    border: 1px solid #334155;
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+.info-card-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: #60a5fa;
+}
+.info-card-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #f1f5f9;
+}
+
+/* --- Loading & Empty States --- */
+.empty-container {
+    text-align: center;
+    padding: 5rem 1rem;
+    color: #94a3b8;
+}
+.empty-title {
+    margin-top: 1rem;
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+.empty-text {
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+}
+.skeleton {
+    background-color: #334155;
+    border-radius: 0.25rem;
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+.skeleton-title { height: 36px; width: 60%; margin: 0 auto 2rem auto; }
+.skeleton-text { height: 16px; margin-bottom: 0.75rem; }
+.skeleton-text-short { width: 80%; }
+.skeleton-text-long { width: 100%; }
+
+/* --- Responsive --- */
+@media (min-width: 768px) {
+    .page-title { font-size: 2.25rem; }
+    .info-grid { grid-template-columns: 1fr 1fr; }
+}

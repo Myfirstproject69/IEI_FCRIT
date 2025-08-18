@@ -1,0 +1,204 @@
+@keyframes fadeIn-stagger {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+@keyframes pulse {
+    50% { opacity: .5; }
+}
+
+.notices-container {
+    max-width: 56rem;
+    margin: auto;
+    padding: 2rem 1rem;
+    animation: fadeIn-stagger 0.5s ease-out forwards;
+}
+
+/* --- Page Header --- */
+.page-header {
+    text-align: center;
+    margin-bottom: 4rem;
+}
+.page-title {
+    font-size: 2.25rem;
+    font-weight: 800;
+    background-image: linear-gradient(to right, #60a5fa, #2dd4bf);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+.page-subtitle {
+    margin-top: 0.5rem;
+    font-size: 1.125rem;
+    color: #94a3b8;
+}
+
+/* --- Timeline --- */
+.timeline {
+    position: relative;
+    padding-left: 2rem;
+    border-left: 3px solid #334155;
+}
+
+/* --- Notice Card --- */
+.notice-card {
+    position: relative;
+    background-color: #1e293b;
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    border: 1px solid #334155;
+    transition: box-shadow 0.3s ease;
+}
+.notice-card:hover {
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.2);
+}
+.notice-card::before {
+    content: '';
+    position: absolute;
+    left: -2.5rem;
+    top: 1.5rem;
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+    background-color: #475569;
+    border: 3px solid #0f172a;
+}
+.notice-card.pinned {
+    border-color: #a78bfa; /* Violet */
+}
+.notice-card.pinned::before {
+    background-color: #a78bfa;
+}
+
+.pin-badge {
+    position: absolute;
+    top: -0.75rem;
+    right: 1rem;
+    background-color: #a78bfa;
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.notice-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+}
+.notice-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #f1f5f9;
+}
+.category-tag {
+    background-color: #475569;
+    color: #e2e8f0;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+.category-tag.academic { background-color: #2563eb; color: white; }
+.category-tag.event { background-color: #db2777; color: white; }
+
+.notice-date {
+    font-size: 0.875rem;
+    color: #94a3b8;
+    margin-bottom: 1rem;
+}
+.notice-content {
+    font-size: 1rem;
+    color: #cbd5e1;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    margin-bottom: 1rem;
+}
+.attachment-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: rgba(59, 130, 246, 0.2);
+    color: #60a5fa;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+.attachment-link:hover {
+    background-color: rgba(59, 130, 246, 0.3);
+}
+
+/* --- Empty State --- */
+.empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: #94a3b8;
+}
+.empty-state svg {
+    margin: 0 auto 1rem auto;
+    width: 3rem;
+    height: 3rem;
+}
+.empty-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #e2e8f0;
+}
+.empty-text {
+    margin-top: 0.5rem;
+}
+
+/* --- Skeleton Loader --- */
+.notice-card-skeleton {
+    position: relative;
+    background-color: #1e293b;
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    border: 1px solid #334155;
+}
+.notice-card-skeleton::before {
+    content: '';
+    position: absolute;
+    left: -2.5rem;
+    top: 1.5rem;
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+    background-color: #475569;
+    border: 3px solid #0f172a;
+}
+.skeleton {
+    background-color: #334155;
+    border-radius: 0.25rem;
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+.skeleton-title-md {
+    height: 28px;
+    width: 70%;
+    margin-bottom: 1rem;
+}
+.skeleton-text {
+    height: 16px;
+    margin-bottom: 0.75rem;
+}
+.skeleton-text-short {
+    width: 80%;
+}
+
+/* --- Responsive Styles --- */
+@media (min-width: 768px) {
+    .page-title { font-size: 2.25rem; }
+    .timeline { padding-left: 3rem; }
+    .notice-card::before { left: -3.5rem; }
+    .notice-card-skeleton::before { left: -3.5rem; }
+}

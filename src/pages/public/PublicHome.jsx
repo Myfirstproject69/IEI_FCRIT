@@ -1,0 +1,212 @@
+// src/pages/public/PublicHome.jsx
+import React, { useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
+
+// --- CSS Styles for the Hero Section ---
+const PageStyles = () => (
+    <style>{`
+        /* --- Keyframes for Animations --- */
+        @keyframes fadeIn-stagger {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-25px) rotate(180deg); }
+            100% { transform: translateY(0px) rotate(360deg); }
+        }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+
+        /* --- Hero Section --- */
+        .hero-section {
+            position: relative;
+            text-align: center;
+            padding: 6rem 1rem;
+            min-height: calc(100vh - 5rem); /* Adjust for header height */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background-color: #0f172a;
+        }
+        .hero-background-shapes {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+        }
+        .shape {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(56, 189, 248, 0.1), transparent 70%);
+            animation: float 20s ease-in-out infinite;
+        }
+        .shape1 { width: 250px; height: 250px; top: 10%; left: 15%; animation-duration: 30s; }
+        .shape2 { width: 350px; height: 350px; bottom: 15%; right: 10%; animation-duration: 35s; animation-delay: -5s; }
+        
+        .hero-content {
+            max-width: 56rem;
+            margin-left: auto;
+            margin-right: auto;
+            position: relative;
+            z-index: 1;
+            transition: transform 0.1s ease-out;
+        }
+        .hero-title, .hero-subtitle, .hero-cta-container {
+            opacity: 0;
+            animation: fadeIn-stagger 0.8s ease-out forwards;
+        }
+        .hero-subtitle { animation-delay: 0.2s; }
+        .hero-cta-container { animation-delay: 0.4s; }
+
+        .hero-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #f1f5f9;
+            letter-spacing: -0.05em;
+            line-height: 1.1;
+            text-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+        }
+        .hero-title-break { display: block; }
+        .hero-title-gradient {
+            background-image: linear-gradient(to right, #60a5fa, #2dd4bf);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            filter: drop-shadow(0 0 15px rgba(56, 189, 248, 0.4));
+        }
+        .hero-subtitle {
+            margin-top: 1.5rem;
+            max-width: 42rem;
+            margin-left: auto;
+            margin-right: auto;
+            font-size: 1.125rem;
+            color: #94a3b8;
+        }
+        .hero-cta-container {
+            margin-top: 2.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+        }
+        .btn {
+            width: 100%;
+            padding: 0.8rem 2rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+            border: 1px solid transparent;
+        }
+        .btn-primary {
+            background-image: linear-gradient(to right, #3b82f6, #1d4ed8);
+            color: white;
+            box-shadow: 0 4px 20px 0 rgba(37, 99, 235, 0.3);
+        }
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 7px 25px 0 rgba(37, 99, 235, 0.4);
+        }
+        .btn-secondary {
+            background-color: rgba(30, 41, 59, 0.5);
+            color: #e2e8f0;
+            border-color: #475569;
+        }
+        .btn-secondary:hover {
+            background-color: #334155;
+            border-color: #94a3b8;
+        }
+
+        /* --- Scroll Down Indicator --- */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: bounce 2s infinite;
+            color: #64748b;
+        }
+
+        /* --- Responsive Styles --- */
+        @media (min-width: 640px) {
+            .hero-section { padding: 8rem 1.5rem; }
+            .hero-title { font-size: 3.25rem; }
+            .hero-title-break { display: none; }
+            .hero-cta-container { flex-direction: row; }
+            .btn { width: auto; }
+        }
+        @media (min-width: 768px) {
+            .hero-section { padding: 10rem 2rem; }
+            .hero-title { font-size: 4rem; }
+            .hero-subtitle { font-size: 1.25rem; }
+        }
+    `}</style>
+);
+
+// --- Hero Component ---
+const Hero = () => {
+    const heroContentRef = useRef(null);
+
+    useEffect(() => {
+        const handleMouseMove = (e) => {
+            if (!heroContentRef.current) return;
+
+            const { clientX, clientY } = e;
+            const { innerWidth, innerHeight } = window;
+
+            const moveX = (clientX - innerWidth / 2) / (innerWidth / 2) * -10; // -10 to 10
+            const moveY = (clientY - innerHeight / 2) / (innerHeight / 2) * -10; // -10 to 10
+            
+            heroContentRef.current.style.transform = `translate(${moveX}px, ${moveY}px)`;
+        };
+
+        window.addEventListener('mousemove', handleMouseMove);
+        return () => window.removeEventListener('mousemove', handleMouseMove);
+    }, []);
+
+    return (
+        <section className="hero-section">
+            <div className="hero-background-shapes">
+                <div className="shape shape1"></div>
+                <div className="shape shape2"></div>
+            </div>
+            <div className="hero-content" ref={heroContentRef}>
+                <h1 className="hero-title">
+                    Empowering Engineers, <br className="hero-title-break" />
+                    <span className="hero-title-gradient">Building the Future</span>
+                </h1>
+                <p className="hero-subtitle">
+                    Welcome to the official hub for the IEI Student Chapter at FCRIT. Discover our latest events, announcements, and achievements.
+                </p>
+                <div className="hero-cta-container">
+                    <Link to="/events" className="btn btn-primary">Explore Events</Link>
+                    <Link to="/about" className="btn btn-secondary">Learn About Us</Link>
+                </div>
+            </div>
+            <div className="scroll-indicator">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M12 5v14" />
+                    <path d="m19 12-7 7-7-7" />
+                </svg>
+            </div>
+        </section>
+    );
+};
+
+// --- Main PublicHome Page Component ---
+export default function PublicHome() {
+    return (
+        <>
+            <PageStyles />
+            <main>
+                <Hero />
+                {/* You can add more sections below the hero section */}
+            </main>
+        </>
+    );
+}

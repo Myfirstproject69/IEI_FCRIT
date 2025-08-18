@@ -1,0 +1,21 @@
+/* src/styles/main.css */
+
+/* Use a modern font and set a base dark theme */
+body {
+  margin: 0;
+  font-family: 'Inter', sans-serif; /* A clean, modern font */
+  background-color: #0F172A; /* slate-900 */
+  color: #E2E8F0; /* slate-200 */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Basic CSS Reset */
+* {
+  box-sizing: border-box;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}

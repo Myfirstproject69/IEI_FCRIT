@@ -1,0 +1,21 @@
+/* index.css — global styles only */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Global body styles */
+body {
+  @apply bg-slate-900 text-white font-sans;
+}
+
+/* Optional: smooth font rendering */
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Optional: default link styles */
+a {
+  @apply no-underline text-inherit;
+}

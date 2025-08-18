@@ -1,0 +1,186 @@
+@keyframes fadeIn-stagger {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+@keyframes pulse {
+    50% { opacity: .5; }
+}
+
+.events-container {
+    max-width: 80rem;
+    margin: auto;
+    padding: 2rem 1rem;
+    animation: fadeIn-stagger 0.5s ease-out forwards;
+}
+
+/* --- Page Header --- */
+.page-header {
+    text-align: center;
+    margin-bottom: 4rem;
+}
+.page-title {
+    font-size: 2.25rem;
+    font-weight: 800;
+    background-image: linear-gradient(to right, #60a5fa, #2dd4bf);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+.page-subtitle {
+    margin-top: 0.5rem;
+    font-size: 1.125rem;
+    color: #94a3b8;
+}
+
+/* --- Events Section --- */
+.events-section {
+    margin-bottom: 4rem;
+}
+.section-title {
+    font-size: 1.875rem;
+    font-weight: 700;
+    color: #60a5fa;
+    margin-bottom: 2rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #334155;
+}
+.section-title.past {
+    color: #94a3b8;
+}
+
+/* --- Events Grid --- */
+.events-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+}
+
+/* --- Event Card (Vibrant & Bold) --- */
+.event-card {
+    background-image: linear-gradient(to bottom right, #1e293b, #0f172a);
+    border-radius: 0.75rem;
+    overflow: hidden;
+    border: 1px solid #334155;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(30, 64, 175, 0.1);
+}
+.event-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(30, 64, 175, 0.2);
+}
+.event-card-poster-wrapper {
+    position: relative;
+    height: 14rem;
+    overflow: hidden;
+}
+.event-card-poster {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.poster-overlay {
+    position: absolute;
+    inset: 0;
+    background-image: linear-gradient(to top, rgba(15, 23, 42, 0.8), transparent 60%);
+}
+.event-type-badge {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background-color: #2563eb;
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+.event-card-content {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+.event-title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #f1f5f9;
+    margin-bottom: 0.75rem;
+}
+.event-description {
+    font-size: 0.875rem;
+    color: #cbd5e1;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+}
+.expanded-details {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: max-height 0.5s ease-out, opacity 0.5s ease-out, margin-top 0.5s ease-out;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+.expanded-details.expanded {
+    max-height: 200px;
+    opacity: 1;
+    margin-top: 1rem;
+}
+.event-info-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    color: #94a3b8;
+}
+.event-info-item strong { color: #cbd5e1; }
+
+.event-card-footer {
+    margin-top: auto;
+    padding-top: 1rem;
+    border-top: 1px solid #334155;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.footer-info {
+    font-size: 0.875rem;
+    color: #94a3b8;
+}
+.footer-date { font-weight: 600; }
+.details-toggle-btn {
+    background-color: #2563eb;
+    color: white;
+    font-weight: 600;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+.details-toggle-btn:hover {
+    background-color: #1d4ed8;
+}
+
+/* --- Empty State & Skeleton --- */
+.empty-text { color: #94a3b8; text-align: center; padding: 2rem; background-color: #1e293b; border-radius: 0.5rem; border: 1px dashed #334155; }
+.event-card-skeleton { background-color: #1e293b; border-radius: 0.75rem; overflow: hidden; border: 1px solid #334155; }
+.skeleton { background-color: #334155; animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+.skeleton-poster { height: 14rem; }
+.skeleton-content { padding: 1.5rem; }
+.skeleton-title-sm { height: 28px; width: 80%; border-radius: 0.25rem; margin-bottom: 1rem; }
+.skeleton-text { height: 16px; width: 100%; border-radius: 0.25rem; }
+
+/* --- Responsive Styles --- */
+@media (min-width: 768px) {
+    .page-title { font-size: 2.25rem; }
+    .events-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (min-width: 1024px) {
+    .events-grid { grid-template-columns: repeat(3, 1fr); }
+}

@@ -1,0 +1,242 @@
+@keyframes fadeIn-stagger {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+@keyframes pulse {
+    50% { opacity: .5; }
+}
+@keyframes zoomIn {
+    from { transform: scale(0.5); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+.visits-container {
+    max-width: 80rem;
+    margin: auto;
+    padding: 2rem 1rem;
+    animation: fadeIn-stagger 0.5s ease-out forwards;
+}
+
+/* --- Page Header --- */
+.page-header {
+    text-align: center;
+    margin-bottom: 4rem;
+}
+.page-title {
+    font-size: 2.25rem;
+    font-weight: 800;
+    background-image: linear-gradient(to right, #60a5fa, #2dd4bf);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+.page-subtitle {
+    margin-top: 0.5rem;
+    font-size: 1.125rem;
+    color: #94a3b8;
+}
+
+/* --- Visits Grid --- */
+.visits-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+}
+
+/* --- Visit Card --- */
+.visit-card {
+    background-color: #1e293b;
+    border-radius: 0.75rem;
+    overflow: hidden;
+    border: 1px solid #334155;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+.visit-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 0 15px rgba(59, 130, 246, 0.2);
+}
+.visit-card-header {
+    position: relative;
+    height: 12rem;
+}
+.visit-header-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.header-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(30, 41, 59, 0.95), transparent 70%);
+}
+.header-text {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    padding: 1rem;
+    color: white;
+}
+.industry-name {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #93c5fd;
+}
+.visit-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-top: 0.25rem;
+}
+.visit-card-body {
+    padding: 1rem;
+}
+.visit-info-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    color: #94a3b8;
+}
+.visit-info-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+}
+.visit-info-item strong {
+    color: #cbd5e1;
+}
+.gallery-section {
+    margin-top: 1.5rem;
+}
+.gallery-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #cbd5e1;
+    margin-bottom: 0.75rem;
+}
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+}
+.gallery-thumbnail {
+    width: 100%;
+    height: 6rem;
+    object-fit: cover;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    transition: transform 0.3s ease, filter 0.3s ease;
+    border: 1px solid #334155;
+}
+.gallery-thumbnail:hover {
+    transform: scale(1.05);
+    filter: brightness(1.1);
+}
+.visit-card-footer {
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid #334155;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.report-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #94a3b8;
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+.report-link:hover {
+    color: #60a5fa;
+}
+.details-toggle-btn {
+    background-image: linear-gradient(to right, #3b82f6, #1d4ed8);
+    color: white;
+    font-weight: 600;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+.details-toggle-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 15px 0 rgba(37, 99, 235, 0.3);
+}
+
+/* --- Expanded Details --- */
+.expanded-details {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: max-height 0.5s ease-out, opacity 0.5s ease-out, margin-top 0.5s ease-out;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+.expanded-details.expanded {
+    max-height: 200px;
+    opacity: 1;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+/* --- Image Modal --- */
+.image-modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    backdrop-filter: blur(5px);
+}
+.image-modal-content {
+    position: relative;
+    animation: zoomIn 0.3s ease-out;
+}
+.enlarged-image {
+    max-width: 90vw;
+    max-height: 90vh;
+    border-radius: 0.5rem;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+.close-modal-btn {
+    position: absolute;
+    top: -1.5rem;
+    right: -1.5rem;
+    background-color: white;
+    color: black;
+    border: none;
+    border-radius: 50%;
+    width: 2.5rem;
+    height: 2.5rem;
+    font-size: 1.5rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* --- Empty State & Skeleton --- */
+.empty-text { color: #94a3b8; text-align: center; padding: 2rem; background-color: #1e293b; border-radius: 0.5rem; border: 1px dashed #334155; }
+.visit-card-skeleton { background-color: #1e293b; border-radius: 0.75rem; overflow: hidden; border: 1px solid #334155; }
+.skeleton { background-color: #334155; animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+.skeleton-header-image { height: 12rem; }
+.skeleton-content { padding: 1rem; }
+.skeleton-title-sm { height: 24px; width: 80%; border-radius: 0.25rem; margin-bottom: 1rem; }
+.skeleton-text { height: 16px; width: 60%; border-radius: 0.25rem; }
+
+/* --- Responsive Styles --- */
+@media (min-width: 768px) {
+    .page-title { font-size: 2.25rem; }
+    .visits-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (min-width: 1024px) {
+    .visits-grid { grid-template-columns: repeat(3, 1fr); }
+}
