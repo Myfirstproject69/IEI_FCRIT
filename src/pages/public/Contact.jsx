@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom'; // Import Link
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../../firebase';
 import './Contact.css'; // Make sure to create and link this CSS file
@@ -16,9 +17,9 @@ const GlobeIcon = () => (
 
 // --- Contact Card Component ---
 const ContactCard = ({ icon, title, url }) => {
-    const cardRef = React.useRef(null);
+    const cardRef = useRef(null);
 
-    React.useEffect(() => {
+    useEffect(() => {
         const card = cardRef.current;
         if (!card) return;
 
@@ -58,7 +59,7 @@ const ContactCard = ({ icon, title, url }) => {
 // --- Skeleton Loader ---
 const ContactSkeleton = () => (
     <div className="contact-grid">
-        {Array.from({ length: 3 }).map((_, i) => (
+        {Array.from({ length: 4 }).map((_, i) => (
             <div key={i} className="contact-card-skeleton">
                 <div className="skeleton skeleton-icon"></div>
                 <div className="skeleton-text-group">
@@ -110,6 +111,11 @@ export default function Contact() {
         ) : (
             <p className="empty-text">Contact information not available.</p>
         )}
+
+        {/* --- Admin Panel Link --- */}
+        <div className="admin-login-section">
+            <Link to="/login" className="admin-login-btn">Admin Panel</Link>
+        </div>
     </div>
   );
 }

@@ -84,6 +84,31 @@
     text-overflow: ellipsis;
 }
 
+/* --- Admin Login Section --- */
+.admin-login-section {
+    text-align: center;
+    margin-top: 4rem;
+    padding-top: 2rem;
+    border-top: 1px solid #334155;
+}
+.admin-login-btn {
+    display: inline-block;
+    padding: 0.5rem 1.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #94a3b8;
+    background-color: transparent;
+    border: 1px solid #4b5563;
+    border-radius: 9999px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+.admin-login-btn:hover {
+    background-color: #334155;
+    color: #f1f5f9;
+    border-color: #6b7280;
+}
+
 /* --- Empty State & Skeleton --- */
 .empty-text {
     text-align: center;
