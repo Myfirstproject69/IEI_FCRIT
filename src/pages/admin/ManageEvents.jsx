@@ -13,6 +13,7 @@ const initialFormState = {
     title: '', type: 'Workshop', dateTime: '', venue: '',
     eligibility: '', feeType: 'Free', feeAmount: '',
     description: '', facultyInCharge: '', status: 'Published',
+    speaker: '', // **NEW FIELD ADDED**
 };
 
 export default function ManageEvents() {
@@ -116,7 +117,7 @@ export default function ManageEvents() {
             
             <div className="admin-header">
                 <h2>Manage Events & Workshops</h2>
-                <button className="btn-primary" onClick={() => setIsModalOpen(true)}>
+                <button type="button" className="btn-primary" onClick={() => setIsModalOpen(true)}>
                     <PlusIcon /> Add New Event
                 </button>
             </div>
@@ -131,55 +132,18 @@ export default function ManageEvents() {
                             </div>
                             
                             <div className="form-grid">
-                                <div className="form-group">
-                                    <label>Event Title</label>
-                                    <input name="title" value={formState.title} onChange={handleInputChange} type="text" required />
-                                </div>
-                                <div className="form-group">
-                                    <label>Type</label>
-                                    <select name="type" value={formState.type} onChange={handleInputChange}>
-                                        <option>Workshop</option><option>Seminar</option><option>Guest Lecture</option>
-                                        <option>Visit</option><option>Competition</option><option>Webinar</option>
-                                    </select>
-                                </div>
-                                <div className="form-group">
-                                    <label>Date & Time</label>
-                                    <input name="dateTime" value={formState.dateTime} onChange={handleInputChange} type="datetime-local" required />
-                                </div>
-                                <div className="form-group">
-                                    <label>Venue</label>
-                                    <input name="venue" value={formState.venue} onChange={handleInputChange} type="text" placeholder="e.g., Online or Seminar Hall" required />
-                                </div>
-                                <div className="form-group">
-                                    <label>Eligibility</label>
-                                    <input name="eligibility" value={formState.eligibility} onChange={handleInputChange} placeholder="e.g., All branches, EE only" required />
-                                </div>
-                                <div className="form-group">
-                                    <label>Fees</label>
-                                    <div className="fee-options">
-                                        <label><input type="radio" name="feeType" value="Free" checked={formState.feeType==='Free'} onChange={handleInputChange}/> Free</label>
-                                        <label><input type="radio" name="feeType" value="Paid" checked={formState.feeType==='Paid'} onChange={handleInputChange}/> Paid</label>
-                                    </div>
-                                    {formState.feeType==='Paid' && <input name="feeAmount" value={formState.feeAmount} onChange={handleInputChange} type="number" placeholder="Enter amount" required />}
-                                </div>
-                                <div className="form-group full-width">
-                                    <label>Description (Agenda, Outcomes)</label>
-                                    <textarea name="description" value={formState.description} onChange={handleInputChange} required></textarea>
-                                </div>
-                                <div className="form-group">
-                                    <label>Faculty/Committee In-charge</label>
-                                    <input name="facultyInCharge" value={formState.facultyInCharge} onChange={handleInputChange} type="text" required />
-                                </div>
-                                <div className="form-group">
-                                    <label>Status</label>
-                                    <select name="status" value={formState.status} onChange={handleInputChange}>
-                                        <option>Published</option><option>Draft</option><option>Completed</option><option>Archived</option>
-                                    </select>
-                                </div>
-                                <div className="form-group full-width">
-                                    <label>Upload Poster/Brochure</label>
-                                    <input id="poster-input" type="file" onChange={(e)=>setPosterFile(e.target.files[0])} accept="image/*" required />
-                                </div>
+                                <div className="form-group"><label>Event Title</label><input name="title" value={formState.title} onChange={handleInputChange} type="text" required /></div>
+                                <div className="form-group"><label>Type</label><select name="type" value={formState.type} onChange={handleInputChange}><option>Workshop</option><option>Seminar</option><option>Guest Lecture</option><option>Visit</option><option>Competition</option><option>Webinar</option></select></div>
+                                <div className="form-group"><label>Date & Time</label><input name="dateTime" value={formState.dateTime} onChange={handleInputChange} type="datetime-local" required /></div>
+                                <div className="form-group"><label>Venue</label><input name="venue" value={formState.venue} onChange={handleInputChange} type="text" placeholder="e.g., Online or Seminar Hall" required /></div>
+                                <div className="form-group"><label>Eligibility</label><input name="eligibility" value={formState.eligibility} onChange={handleInputChange} placeholder="e.g., All branches, EE only" required /></div>
+                                <div className="form-group"><label>Fees</label><div className="fee-options"><label><input type="radio" name="feeType" value="Free" checked={formState.feeType==='Free'} onChange={handleInputChange}/> Free</label><label><input type="radio" name="feeType" value="Paid" checked={formState.feeType==='Paid'} onChange={handleInputChange}/> Paid</label></div>{formState.feeType==='Paid' && <input name="feeAmount" value={formState.feeAmount} onChange={handleInputChange} type="number" placeholder="Enter amount" required />}</div>
+                                <div className="form-group full-width"><label>Description (Agenda, Outcomes)</label><textarea name="description" value={formState.description} onChange={handleInputChange} required></textarea></div>
+                                <div className="form-group"><label>Faculty/Committee In-charge</label><input name="facultyInCharge" value={formState.facultyInCharge} onChange={handleInputChange} type="text" required /></div>
+                                {/* ** NEW SPEAKER FIELD ** */}
+                                <div className="form-group"><label>Speaker (if any)</label><input name="speaker" value={formState.speaker} onChange={handleInputChange} type="text" /></div>
+                                <div className="form-group"><label>Status</label><select name="status" value={formState.status} onChange={handleInputChange}><option>Published</option><option>Draft</option><option>Completed</option><option>Archived</option></select></div>
+                                <div className="form-group full-width"><label>Upload Poster/Brochure</label><input id="poster-input" type="file" onChange={(e)=>setPosterFile(e.target.files[0])} accept="image/*" required /></div>
                             </div>
 
                             <div className="modal-footer">

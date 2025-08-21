@@ -19,6 +19,11 @@ const DollarSignIcon = () => (
 const AwardIcon = () => (
     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 17 17 23 15.79 13.88"></polyline></svg>
 );
+// ** NEW SPEAKER ICON **
+const MicIcon = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line></svg>
+);
+
 
 // --- Event Card Component ---
 const EventCard = ({ event }) => {
@@ -42,6 +47,8 @@ const EventCard = ({ event }) => {
                     <div className="event-info-item"><MapPinIcon /><span>{event.venue}</span></div>
                     <div className="event-info-item"><UserCheckIcon /><span><strong>Eligibility:</strong> {event.eligibility}</span></div>
                     <div className="event-info-item"><AwardIcon /><span><strong>Faculty:</strong> {event.facultyInCharge}</span></div>
+                    {/* ** NEW SPEAKER FIELD DISPLAYED ** */}
+                    {event.speaker && <div className="event-info-item"><MicIcon /><span><strong>Speaker:</strong> {event.speaker}</span></div>}
                     <div className="event-info-item"><DollarSignIcon /><span><strong>Fee:</strong> {event.feeType === 'Paid' ? `₹${event.feeAmount}` : 'Free'}</span></div>
                 </div>
 
