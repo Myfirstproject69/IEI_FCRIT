@@ -1,7 +1,7 @@
 /* General Admin Page Styles */
 .admin-page-container {
     padding: 2rem;
-    background-color: #111827; /* Darker background */
+    background-color: #111827;
     color: #f3f4f6;
     font-family: 'Inter', sans-serif;
 }
@@ -15,10 +15,7 @@
     border-bottom: 1px solid #374151;
 }
 
-.admin-header h2 {
-    font-size: 1.5rem;
-    font-weight: 700;
-}
+.admin-header h2 { font-size: 1.5rem; font-weight: 700; }
 
 /* Buttons */
 .btn-primary, .btn-secondary, .btn-danger {
@@ -32,6 +29,7 @@
     cursor: pointer;
     transition: all 0.3s ease;
 }
+
 .btn-primary { background-color: #3b82f6; color: white; }
 .btn-primary:hover { background-color: #2563eb; }
 .btn-secondary { background-color: #4b5563; color: white; }
@@ -42,14 +40,10 @@ button:disabled { opacity: 0.5; cursor: not-allowed; }
 
 /* Modal Styles */
 .modal-backdrop {
-    position: fixed;
-    inset: 0;
-    background-color: rgba(0, 0, 0, 0.7);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 100;
+    position: fixed; inset: 0; background-color: rgba(0, 0, 0, 0.7);
+    display: flex; align-items: center; justify-content: center; z-index: 100;
 }
+
 .modal-content {
     background-color: #1f2937;
     border-radius: 0.75rem;
@@ -58,59 +52,44 @@ button:disabled { opacity: 0.5; cursor: not-allowed; }
     max-height: 90vh;
     overflow-y: auto;
 }
+
 .modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem 1.5rem;
-    border-bottom: 1px solid #374151;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 1rem 1.5rem; border-bottom: 1px solid #374151;
 }
+
 .modal-header h3 { font-size: 1.25rem; font-weight: 600; }
 .close-btn { background: none; border: none; font-size: 1.5rem; color: #9ca3af; cursor: pointer; }
+
 .modal-footer {
-    display: flex;
-    justify-content: flex-end;
-    gap: 1rem;
-    padding: 1rem 1.5rem;
-    border-top: 1px solid #374151;
+    display: flex; justify-content: flex-end; gap: 1rem;
+    padding: 1rem 1.5rem; border-top: 1px solid #374151;
 }
 
 /* Form Styles */
-.event-form {
-    display: flex;
-    flex-direction: column;
+.event-form .form-grid {
+    padding: 1.5rem; display: grid; grid-template-columns: 1fr; gap: 1rem;
 }
-.form-grid {
-    padding: 1.5rem;
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 1rem;
-}
+
 .form-group { display: flex; flex-direction: column; }
 .full-width { grid-column: 1 / -1; }
+
 .form-group label {
-    font-size: 0.875rem;
-    font-weight: 500;
-    margin-bottom: 0.5rem;
-    color: #d1d5db;
+    font-size: 0.875rem; font-weight: 500; margin-bottom: 0.5rem; color: #d1d5db;
 }
-input[type="text"], input[type="datetime-local"], input[type="number"], select, textarea {
-    background-color: #374151;
-    border: 1px solid #4b5563;
-    color: #f3f4f6;
-    padding: 0.75rem;
-    border-radius: 0.5rem;
+
+input, select, textarea {
+    background-color: #374151; border: 1px solid #4b5563; color: #f3f4f6;
+    padding: 0.75rem; border-radius: 0.5rem;
 }
 textarea { min-height: 100px; }
+
 .fee-options { display: flex; gap: 1rem; margin-bottom: 0.5rem; }
 .fee-options label { display: flex; align-items: center; gap: 0.5rem; }
 
 /* Event List */
-.event-list {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
+.event-list { display: flex; flex-direction: column; gap: 1rem; }
+
 .event-list-item {
     display: flex;
     align-items: center;
@@ -120,45 +99,41 @@ textarea { min-height: 100px; }
     border-radius: 0.5rem;
     border: 1px solid #374151;
 }
+
 .item-poster {
     width: 4rem;
     height: 4rem;
     object-fit: cover;
     border-radius: 0.25rem;
 }
+
 .item-details { flex-grow: 1; }
 .item-title { font-weight: 600; color: #f3f4f6; }
 .item-date { font-size: 0.875rem; color: #9ca3af; }
+
 .status-badge {
-    display: inline-block;
-    padding: 0.1rem 0.5rem;
-    border-radius: 9999px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    margin-left: 0.5rem;
+    display: inline-block; padding: 0.1rem 0.5rem; border-radius: 9999px;
+    font-size: 0.75rem; font-weight: 600; margin-left: 0.5rem;
 }
 .status-badge.published { background-color: #22c55e; color: #1f2937; }
 .status-badge.draft { background-color: #f59e0b; color: #1f2937; }
 .status-badge.completed { background-color: #6b7280; color: white; }
 .status-badge.archived { background-color: #ef4444; color: white; }
-.delete-btn {
-    background: none;
-    border: none;
-    color: #9ca3af;
-    cursor: pointer;
-    padding: 0.5rem;
+
+/* Item Actions */
+.item-actions { display: flex; gap: 0.5rem; }
+.action-btn {
+    background: none; border: none; color: #9ca3af; cursor: pointer;
+    padding: 0.5rem; border-radius: 50%; transition: all 0.3s ease;
 }
-.delete-btn:hover { color: #ef4444; }
+.action-btn:hover { background-color: #4b5563; }
+.action-btn.edit:hover { color: #60a5fa; }
+.action-btn.delete:hover { color: #ef4444; }
 
 /* Notification & Confirmation Modal */
 .notification {
-    position: fixed;
-    top: 1rem;
-    right: 1rem;
-    padding: 1rem 1.5rem;
-    border-radius: 0.5rem;
-    color: white;
-    z-index: 101;
+    position: fixed; top: 1rem; right: 1rem; padding: 1rem 1.5rem;
+    border-radius: 0.5rem; color: white; z-index: 101;
 }
 .notification.success { background-color: #22c55e; }
 .notification.error { background-color: #ef4444; }
@@ -167,17 +142,16 @@ textarea { min-height: 100px; }
     position: fixed; inset: 0; background-color: rgba(0, 0, 0, 0.7);
     display: flex; align-items: center; justify-content: center; z-index: 102;
 }
+
 .confirmation-modal {
-    background-color: #1f2937;
-    padding: 2rem;
-    border-radius: 0.75rem;
-    text-align: center;
+    background-color: #1f2937; padding: 2rem; border-radius: 0.75rem; text-align: center;
 }
+
 .confirmation-modal h3 { font-size: 1.25rem; margin-bottom: 0.5rem; }
 .confirmation-modal p { color: #9ca3af; margin-bottom: 1.5rem; }
 .modal-actions { display: flex; justify-content: center; gap: 1rem; }
 
 /* Responsive */
 @media (min-width: 768px) {
-    .form-grid { grid-template-columns: 1fr 1fr; }
+    .event-form .form-grid { grid-template-columns: 1fr 1fr; }
 }

@@ -95,7 +95,8 @@ const VisitCardSkeleton = () => (
 );
 
 export default function Visits() {
-  const [visits, setVisits] = useState([]);
+  const [upcomingVisits, setUpcomingVisits] = useState([]);
+  const [pastVisits, setPastVisits] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -103,7 +104,17 @@ export default function Visits() {
       try {
         const visitsQuery = query(collection(db, 'industrialVisits'), orderBy('dateOfVisit', 'desc'));
         const visitsSnap = await getDocs(visitsQuery);
-        setVisits(visitsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+        const allVisits = visitsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+        const now = new Date();
+        now.setHours(0, 0, 0, 0); // Set to the beginning of the day for accurate comparison
+
+        const upcoming = allVisits.filter(visit => new Date(visit.dateOfVisit) >= now);
+        const past = allVisits.filter(visit => new Date(visit.dateOfVisit) < now);
+
+        setUpcomingVisits(upcoming);
+        setPastVisits(past);
+
       } catch (error) {
         console.error("Error fetching visits:", error);
       } finally {
@@ -134,13 +145,28 @@ export default function Visits() {
             <h1 className="page-title">Industrial Visits & Field Trips</h1>
             <p className="page-subtitle">Gaining practical exposure through on-site industrial experiences.</p>
         </header>
-        {visits.length > 0 ? (
-            <div className="visits-grid">
-                {visits.map(visit => <VisitCard key={visit.id} visit={visit} />)}
-            </div>
-        ) : (
-            <p className="empty-text">No industrial visits have been recorded yet.</p>
-        )}
+
+        <section className="visits-section">
+            <h2 className="section-title">Upcoming Visits</h2>
+            {upcomingVisits.length > 0 ? (
+                <div className="visits-grid">
+                    {upcomingVisits.map(visit => <VisitCard key={visit.id} visit={visit} />)}
+                </div>
+            ) : (
+                <p className="empty-text">No upcoming visits scheduled at the moment.</p>
+            )}
+        </section>
+
+        <section className="visits-section">
+            <h2 className="section-title past">Past Visits</h2>
+            {pastVisits.length > 0 ? (
+                <div className="visits-grid">
+                    {pastVisits.map(visit => <VisitCard key={visit.id} visit={visit} />)}
+                </div>
+            ) : (
+                <p className="empty-text">No past visits have been recorded yet.</p>
+            )}
+        </section>
     </div>
   );
 }

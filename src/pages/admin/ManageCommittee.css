@@ -130,6 +130,7 @@ input, select {
 }
 .action-btn:hover { background-color: #4b5563; color: white; }
 .action-btn.delete:hover { color: #ef4444; }
+.action-btn.edit:hover { color: #60a5fa; } /* ** NEW: Edit button hover color ** */
 
 /* Notification & Confirmation Modal */
 .notification {

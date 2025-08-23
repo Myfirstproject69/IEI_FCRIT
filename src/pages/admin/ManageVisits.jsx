@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { collection, addDoc, getDocs, deleteDoc, doc, serverTimestamp, orderBy, query } from 'firebase/firestore';
+import { collection, addDoc, getDocs, deleteDoc, doc, serverTimestamp, orderBy, query, updateDoc } from 'firebase/firestore';
 import { db } from '../../firebase';
 import { uploadToCloudinary } from '../../utils/cloudinary';
 import './ManageVisits.css'; // Make sure to create and link this CSS file
@@ -7,6 +7,7 @@ import './ManageVisits.css'; // Make sure to create and link this CSS file
 // --- SVG Icons ---
 const PlusIcon = () => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>;
 const TrashIcon = () => <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>;
+const EditIcon = () => <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>;
 
 // --- Initial Form State ---
 const initialFormState = {
@@ -21,6 +22,7 @@ export default function ManageVisits() {
     const [visits, setVisits] = useState([]);
     const [loading, setLoading] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [editingVisit, setEditingVisit] = useState(null);
     const [notification, setNotification] = useState({ show: false, message: '', type: '' });
     const [confirmDelete, setConfirmDelete] = useState(null);
 
@@ -52,7 +54,21 @@ export default function ManageVisits() {
         }
     };
 
-    const resetForm = () => {
+    const openModalForNew = () => {
+        setEditingVisit(null);
+        setFormState(initialFormState);
+        setIsModalOpen(true);
+    };
+
+    const openModalForEdit = (visit) => {
+        setEditingVisit(visit);
+        setFormState(visit);
+        setIsModalOpen(true);
+    };
+
+    const closeModal = () => {
+        setIsModalOpen(false);
+        setEditingVisit(null);
         setFormState(initialFormState);
         setReportFile(null);
         setPhotoFiles([]);
@@ -64,31 +80,46 @@ export default function ManageVisits() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!reportFile || photoFiles.length === 0) {
-            showNotification('Please upload a permission letter and at least one photo.', 'error');
+        if (!reportFile && !editingVisit) {
+            showNotification('Please upload a permission letter.', 'error');
+            return;
+        }
+        if (photoFiles.length === 0 && !editingVisit) {
+            showNotification('Please upload at least one photo.', 'error');
             return;
         }
         setLoading(true);
 
         try {
-            const reportUrl = await uploadToCloudinary(reportFile);
-            const photoUrls = await Promise.all(
-                Array.from(photoFiles).map(file => uploadToCloudinary(file))
-            );
+            let reportUrl = editingVisit ? formState.reportUrl : '';
+            if (reportFile) {
+                reportUrl = await uploadToCloudinary(reportFile);
+            }
 
-            await addDoc(visitsCollectionRef, {
-                ...formState,
-                reportUrl,
-                photoUrls,
-                createdAt: serverTimestamp(),
-            });
+            let photoUrls = editingVisit ? formState.photoUrls : [];
+            if (photoFiles.length > 0) {
+                const photoUploadPromises = Array.from(photoFiles).map(file => uploadToCloudinary(file));
+                photoUrls = await Promise.all(photoUploadPromises);
+            }
+            
+            const visitData = { ...formState, reportUrl, photoUrls };
 
-            resetForm();
+            if (editingVisit) {
+                const visitDoc = doc(db, 'industrialVisits', editingVisit.id);
+                await updateDoc(visitDoc, visitData);
+                showNotification('Visit updated successfully!', 'success');
+            } else {
+                await addDoc(visitsCollectionRef, {
+                    ...visitData,
+                    createdAt: serverTimestamp(),
+                });
+                showNotification('Industrial Visit added successfully!', 'success');
+            }
+
             fetchVisits();
-            setIsModalOpen(false);
-            showNotification('Industrial Visit added successfully!', 'success');
+            closeModal();
         } catch (err) {
-            showNotification('Failed to add visit. Please try again.', 'error');
+            showNotification('Operation failed. Please try again.', 'error');
             console.error(err);
         } finally {
             setLoading(false);
@@ -109,10 +140,7 @@ export default function ManageVisits() {
 
     return (
         <div className="admin-page-container">
-            {notification.show && (
-                <div className={`notification ${notification.type}`}>{notification.message}</div>
-            )}
-
+            {notification.show && <div className={`notification ${notification.type}`}>{notification.message}</div>}
             {confirmDelete && (
                 <div className="confirmation-modal-backdrop">
                     <div className="confirmation-modal">
@@ -128,7 +156,7 @@ export default function ManageVisits() {
             
             <div className="admin-header">
                 <h2>Manage Industrial Visits</h2>
-                <button className="btn-primary" onClick={() => setIsModalOpen(true)}>
+                <button className="btn-primary" onClick={openModalForNew}>
                     <PlusIcon /> Add New Visit
                 </button>
             </div>
@@ -138,23 +166,21 @@ export default function ManageVisits() {
                     <div className="modal-content">
                         <form onSubmit={handleSubmit} className="visit-form">
                             <div className="modal-header">
-                                <h3>Add New Visit</h3>
-                                <button type="button" className="close-btn" onClick={() => setIsModalOpen(false)}>&times;</button>
+                                <h3>{editingVisit ? 'Edit Visit' : 'Add New Visit'}</h3>
+                                <button type="button" className="close-btn" onClick={closeModal}>&times;</button>
                             </div>
-                            
                             <div className="form-grid">
-                                <div className="form-group"><label>Visit Title</label><input type="text" value={formState.visitTitle} onChange={(e) => setFormState({...formState, visitTitle: e.target.value})} required /></div>
-                                <div className="form-group"><label>Industry Name & Location</label><input type="text" value={formState.industryName} onChange={(e) => setFormState({...formState, industryName: e.target.value})} required /></div>
-                                <div className="form-group"><label>Date of Visit</label><input type="date" value={formState.dateOfVisit} onChange={(e) => setFormState({...formState, dateOfVisit: e.target.value})} required /></div>
-                                <div className="form-group"><label>Faculty In-charge</label><input type="text" value={formState.facultyIncharge} onChange={(e) => setFormState({...formState, facultyIncharge: e.target.value})} required /></div>
-                                <div className="form-group full-width"><label>Student Eligibility</label><input type="text" value={formState.eligibility} onChange={(e) => setFormState({...formState, eligibility: e.target.value})} placeholder="e.g., 3rd Year EE Students" required /></div>
-                                <div className="form-group"><label>Upload Permission Letter (max 1MB)</label><input id="report-file-input" type="file" onChange={handleReportFileChange} accept="image/*" required /></div>
-                                <div className="form-group"><label>Upload Photos (multiple)</label><input id="photos-file-input" type="file" onChange={(e) => setPhotoFiles(e.target.files)} accept="image/*" multiple required /></div>
+                                <div className="form-group"><label>Visit Title</label><input type="text" name="visitTitle" value={formState.visitTitle} onChange={(e) => setFormState({...formState, visitTitle: e.target.value})} required /></div>
+                                <div className="form-group"><label>Industry Name & Location</label><input type="text" name="industryName" value={formState.industryName} onChange={(e) => setFormState({...formState, industryName: e.target.value})} required /></div>
+                                <div className="form-group"><label>Date of Visit</label><input type="date" name="dateOfVisit" value={formState.dateOfVisit} onChange={(e) => setFormState({...formState, dateOfVisit: e.target.value})} required /></div>
+                                <div className="form-group"><label>Faculty In-charge</label><input type="text" name="facultyIncharge" value={formState.facultyIncharge} onChange={(e) => setFormState({...formState, facultyIncharge: e.target.value})} required /></div>
+                                <div className="form-group full-width"><label>Student Eligibility</label><input type="text" name="eligibility" value={formState.eligibility} onChange={(e) => setFormState({...formState, eligibility: e.target.value})} placeholder="e.g., 3rd Year EE Students" required /></div>
+                                <div className="form-group"><label>Upload Permission Letter (max 1MB)</label><input id="report-file-input" type="file" onChange={handleReportFileChange} accept="image/*" required={!editingVisit} /></div>
+                                <div className="form-group"><label>Upload Photos (multiple)</label><input id="photos-file-input" type="file" onChange={(e) => setPhotoFiles(e.target.files)} accept="image/*" multiple required={!editingVisit} /></div>
                             </div>
-
                             <div className="modal-footer">
-                                <button type="button" className="btn-secondary" onClick={() => setIsModalOpen(false)}>Cancel</button>
-                                <button type="submit" className="btn-primary" disabled={loading}>{loading ? 'Uploading...' : 'Add Visit'}</button>
+                                <button type="button" className="btn-secondary" onClick={closeModal}>Cancel</button>
+                                <button type="submit" className="btn-primary" disabled={loading}>{loading ? 'Saving...' : 'Save Visit'}</button>
                             </div>
                         </form>
                     </div>
@@ -170,9 +196,10 @@ export default function ManageVisits() {
                                 <p className="item-title">{visit.visitTitle}</p>
                                 <p className="item-subtitle">{visit.industryName} | {visit.dateOfVisit}</p>
                             </div>
-                            <button onClick={() => setConfirmDelete(visit.id)} className="delete-btn">
-                                <TrashIcon />
-                            </button>
+                            <div className="item-actions">
+                                <button onClick={() => openModalForEdit(visit)} className="action-btn edit" title="Edit"><EditIcon /></button>
+                                <button onClick={() => setConfirmDelete(visit.id)} className="action-btn delete" title="Delete"><TrashIcon /></button>
+                            </div>
                         </div>
                     ))}
                 </div>
