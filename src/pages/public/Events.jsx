@@ -19,17 +19,28 @@ const DollarSignIcon = () => (
 const AwardIcon = () => (
     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 17 17 23 15.79 13.88"></polyline></svg>
 );
-// ** NEW SPEAKER ICON **
 const MicIcon = () => (
     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line></svg>
 );
 
+// --- ** NEW HELPER FUNCTION TO HANDLE DIFFERENT DATE FORMATS ** ---
+const getSafeDate = (dateTimeValue) => {
+    if (!dateTimeValue) return null;
+    // Check if it's a Firestore Timestamp
+    if (typeof dateTimeValue.toDate === 'function') {
+        return dateTimeValue.toDate();
+    }
+    // Otherwise, assume it's a string or number and try to parse it
+    return new Date(dateTimeValue);
+};
 
 // --- Event Card Component ---
 const EventCard = ({ event }) => {
     const [isExpanded, setIsExpanded] = useState(false);
-    const eventDate = new Date(event.dateTime);
-    const formattedDate = eventDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    const eventDate = getSafeDate(event.dateTime); // Use the safe function
+    
+    const formattedDate = eventDate ? eventDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'N/A';
+    const formattedTime = eventDate ? eventDate.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }) : 'N/A';
 
     return (
         <div className="event-card">
@@ -43,11 +54,10 @@ const EventCard = ({ event }) => {
                 <p className="event-description">{event.description}</p>
                 
                 <div className={`expanded-details ${isExpanded ? 'expanded' : ''}`}>
-                    <div className="event-info-item"><CalendarIcon /><span>{formattedDate} at {eventDate.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true })}</span></div>
+                    <div className="event-info-item"><CalendarIcon /><span>{formattedDate} at {formattedTime}</span></div>
                     <div className="event-info-item"><MapPinIcon /><span>{event.venue}</span></div>
                     <div className="event-info-item"><UserCheckIcon /><span><strong>Eligibility:</strong> {event.eligibility}</span></div>
                     <div className="event-info-item"><AwardIcon /><span><strong>Faculty:</strong> {event.facultyInCharge}</span></div>
-                    {/* ** NEW SPEAKER FIELD DISPLAYED ** */}
                     {event.speaker && <div className="event-info-item"><MicIcon /><span><strong>Speaker:</strong> {event.speaker}</span></div>}
                     <div className="event-info-item"><DollarSignIcon /><span><strong>Fee:</strong> {event.feeType === 'Paid' ? `₹${event.feeAmount}` : 'Free'}</span></div>
                 </div>
@@ -93,11 +103,13 @@ export default function Events() {
           event.status === 'Published' || event.status === 'Completed'
         );
 
-        const upcoming = publishedAndCompleted.filter(event => new Date(event.dateTime) >= now);
-        const past = publishedAndCompleted.filter(event => new Date(event.dateTime) < now);
+        // ** USE SAFE DATE FUNCTION FOR FILTERING **
+        const upcoming = publishedAndCompleted.filter(event => getSafeDate(event.dateTime) >= now);
+        const past = publishedAndCompleted.filter(event => getSafeDate(event.dateTime) < now);
 
-        setUpcomingEvents(upcoming.sort((a, b) => new Date(a.dateTime) - new Date(b.dateTime)));
-        setPastEvents(past.sort((a, b) => new Date(b.dateTime) - new Date(a.dateTime)));
+        // ** USE SAFE DATE FUNCTION FOR SORTING **
+        setUpcomingEvents(upcoming.sort((a, b) => getSafeDate(a.dateTime) - getSafeDate(b.dateTime)));
+        setPastEvents(past.sort((a, b) => getSafeDate(b.dateTime) - getSafeDate(a.dateTime)));
       } catch (error) {
         console.error("Error fetching events:", error);
       } finally {

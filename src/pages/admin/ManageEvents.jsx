@@ -10,10 +10,10 @@ const TrashIcon = () => <svg xmlns="http://www.w3.org/2000/svg" width="18" heigh
 
 // --- Initial Form State ---
 const initialFormState = {
-    title: '', type: 'Workshop', dateTime: '', venue: '',
+    title: '', type: 'Workshop', date: '', eventTime: '', venue: '',
     eligibility: '', feeType: 'Free', feeAmount: '',
     description: '', facultyInCharge: '', status: 'Published',
-    speaker: '', // **NEW FIELD ADDED**
+    speaker: '',
 };
 
 export default function ManageEvents() {
@@ -64,8 +64,11 @@ export default function ManageEvents() {
 
         try {
             const posterUrl = await uploadToCloudinary(posterFile);
+            const dateTime = new Date(`${formState.date}T${formState.eventTime}`);
+            
             await addDoc(eventsCollectionRef, {
                 ...formState,
+                dateTime: dateTime,
                 feeAmount: formState.feeType === 'Paid' ? formState.feeAmount : '0',
                 posterUrl,
                 createdAt: serverTimestamp(),
@@ -92,6 +95,17 @@ export default function ManageEvents() {
             showNotification('Failed to delete event.', 'error');
             console.error(err);
         }
+    };
+
+    // ** NEW HELPER FUNCTION TO FORMAT DATES SAFELY **
+    const getSafeDate = (event) => {
+        if (!event.dateTime) return 'No date specified';
+        // Check if it's a Firestore Timestamp
+        if (typeof event.dateTime.toDate === 'function') {
+            return event.dateTime.toDate().toLocaleString();
+        }
+        // Otherwise, assume it's a string or number and try to parse it
+        return new Date(event.dateTime).toLocaleString();
     };
 
     return (
@@ -134,13 +148,13 @@ export default function ManageEvents() {
                             <div className="form-grid">
                                 <div className="form-group"><label>Event Title</label><input name="title" value={formState.title} onChange={handleInputChange} type="text" required /></div>
                                 <div className="form-group"><label>Type</label><select name="type" value={formState.type} onChange={handleInputChange}><option>Workshop</option><option>Seminar</option><option>Guest Lecture</option><option>Visit</option><option>Competition</option><option>Webinar</option></select></div>
-                                <div className="form-group"><label>Date & Time</label><input name="dateTime" value={formState.dateTime} onChange={handleInputChange} type="datetime-local" required /></div>
+                                <div className="form-group"><label>Date</label><input name="date" value={formState.date} onChange={handleInputChange} type="date" required /></div>
+                                <div className="form-group"><label>Time</label><input name="eventTime" value={formState.eventTime} onChange={handleInputChange} type="time" required /></div>
                                 <div className="form-group"><label>Venue</label><input name="venue" value={formState.venue} onChange={handleInputChange} type="text" placeholder="e.g., Online or Seminar Hall" required /></div>
                                 <div className="form-group"><label>Eligibility</label><input name="eligibility" value={formState.eligibility} onChange={handleInputChange} placeholder="e.g., All branches, EE only" required /></div>
                                 <div className="form-group"><label>Fees</label><div className="fee-options"><label><input type="radio" name="feeType" value="Free" checked={formState.feeType==='Free'} onChange={handleInputChange}/> Free</label><label><input type="radio" name="feeType" value="Paid" checked={formState.feeType==='Paid'} onChange={handleInputChange}/> Paid</label></div>{formState.feeType==='Paid' && <input name="feeAmount" value={formState.feeAmount} onChange={handleInputChange} type="number" placeholder="Enter amount" required />}</div>
                                 <div className="form-group full-width"><label>Description (Agenda, Outcomes)</label><textarea name="description" value={formState.description} onChange={handleInputChange} required></textarea></div>
                                 <div className="form-group"><label>Faculty/Committee In-charge</label><input name="facultyInCharge" value={formState.facultyInCharge} onChange={handleInputChange} type="text" required /></div>
-                                {/* ** NEW SPEAKER FIELD ** */}
                                 <div className="form-group"><label>Speaker (if any)</label><input name="speaker" value={formState.speaker} onChange={handleInputChange} type="text" /></div>
                                 <div className="form-group"><label>Status</label><select name="status" value={formState.status} onChange={handleInputChange}><option>Published</option><option>Draft</option><option>Completed</option><option>Archived</option></select></div>
                                 <div className="form-group full-width"><label>Upload Poster/Brochure</label><input id="poster-input" type="file" onChange={(e)=>setPosterFile(e.target.files[0])} accept="image/*" required /></div>
@@ -162,7 +176,8 @@ export default function ManageEvents() {
                             <img src={event.posterUrl} alt={event.title} className="item-poster" />
                             <div className="item-details">
                                 <p className="item-title">{event.title} <span className={`status-badge ${event.status?.toLowerCase()}`}>{event.status}</span></p>
-                                <p className="item-date">{new Date(event.dateTime).toLocaleString()}</p>
+                                {/* ** THIS LINE IS NOW FIXED ** */}
+                                <p className="item-date">{getSafeDate(event)}</p>
                             </div>
                             <button onClick={() => setConfirmDelete(event.id)} className="delete-btn">
                                 <TrashIcon />
