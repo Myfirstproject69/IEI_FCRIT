@@ -14,6 +14,7 @@ const initialFormState = {
     eligibility: '', feeType: 'Free', feeAmount: '',
     description: '', facultyInCharge: '', status: 'Published',
     speaker: '',
+    registerLink: '', // **NEW FIELD ADDED**
 };
 
 export default function ManageEvents() {
@@ -97,14 +98,11 @@ export default function ManageEvents() {
         }
     };
 
-    // ** NEW HELPER FUNCTION TO FORMAT DATES SAFELY **
     const getSafeDate = (event) => {
         if (!event.dateTime) return 'No date specified';
-        // Check if it's a Firestore Timestamp
         if (typeof event.dateTime.toDate === 'function') {
             return event.dateTime.toDate().toLocaleString();
         }
-        // Otherwise, assume it's a string or number and try to parse it
         return new Date(event.dateTime).toLocaleString();
     };
 
@@ -157,6 +155,8 @@ export default function ManageEvents() {
                                 <div className="form-group"><label>Faculty/Committee In-charge</label><input name="facultyInCharge" value={formState.facultyInCharge} onChange={handleInputChange} type="text" required /></div>
                                 <div className="form-group"><label>Speaker (if any)</label><input name="speaker" value={formState.speaker} onChange={handleInputChange} type="text" /></div>
                                 <div className="form-group"><label>Status</label><select name="status" value={formState.status} onChange={handleInputChange}><option>Published</option><option>Draft</option><option>Completed</option><option>Archived</option></select></div>
+                                {/* ** NEW REGISTER LINK FIELD ** */}
+                                <div className="form-group"><label>Register Link (Google Form, etc.)</label><input name="registerLink" value={formState.registerLink} onChange={handleInputChange} type="url" /></div>
                                 <div className="form-group full-width"><label>Upload Poster/Brochure</label><input id="poster-input" type="file" onChange={(e)=>setPosterFile(e.target.files[0])} accept="image/*" required /></div>
                             </div>
 
@@ -176,7 +176,6 @@ export default function ManageEvents() {
                             <img src={event.posterUrl} alt={event.title} className="item-poster" />
                             <div className="item-details">
                                 <p className="item-title">{event.title} <span className={`status-badge ${event.status?.toLowerCase()}`}>{event.status}</span></p>
-                                {/* ** THIS LINE IS NOW FIXED ** */}
                                 <p className="item-date">{getSafeDate(event)}</p>
                             </div>
                             <button onClick={() => setConfirmDelete(event.id)} className="delete-btn">

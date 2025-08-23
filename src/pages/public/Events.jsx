@@ -22,22 +22,25 @@ const AwardIcon = () => (
 const MicIcon = () => (
     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line></svg>
 );
+// ** NEW REGISTER ICON **
+const EditIcon = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+);
 
-// --- ** NEW HELPER FUNCTION TO HANDLE DIFFERENT DATE FORMATS ** ---
+
+// --- Helper function to handle different date formats ---
 const getSafeDate = (dateTimeValue) => {
     if (!dateTimeValue) return null;
-    // Check if it's a Firestore Timestamp
     if (typeof dateTimeValue.toDate === 'function') {
         return dateTimeValue.toDate();
     }
-    // Otherwise, assume it's a string or number and try to parse it
     return new Date(dateTimeValue);
 };
 
 // --- Event Card Component ---
 const EventCard = ({ event }) => {
     const [isExpanded, setIsExpanded] = useState(false);
-    const eventDate = getSafeDate(event.dateTime); // Use the safe function
+    const eventDate = getSafeDate(event.dateTime);
     
     const formattedDate = eventDate ? eventDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'N/A';
     const formattedTime = eventDate ? eventDate.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }) : 'N/A';
@@ -63,10 +66,13 @@ const EventCard = ({ event }) => {
                 </div>
 
                 <div className="event-card-footer">
-                    <div className="footer-info">
-                        <p className="footer-date">{formattedDate}</p>
-                        <p className="footer-venue">{event.venue}</p>
-                    </div>
+                    {/* ** NEW REGISTER BUTTON ** */}
+                    {event.registerLink && (
+                        <a href={event.registerLink} target="_blank" rel="noopener noreferrer" className="register-btn">
+                            <EditIcon />
+                            Register Now
+                        </a>
+                    )}
                     <button onClick={() => setIsExpanded(!isExpanded)} className="details-toggle-btn">
                         {isExpanded ? 'Less' : 'More'}
                     </button>
@@ -103,11 +109,9 @@ export default function Events() {
           event.status === 'Published' || event.status === 'Completed'
         );
 
-        // ** USE SAFE DATE FUNCTION FOR FILTERING **
         const upcoming = publishedAndCompleted.filter(event => getSafeDate(event.dateTime) >= now);
         const past = publishedAndCompleted.filter(event => getSafeDate(event.dateTime) < now);
 
-        // ** USE SAFE DATE FUNCTION FOR SORTING **
         setUpcomingEvents(upcoming.sort((a, b) => getSafeDate(a.dateTime) - getSafeDate(b.dateTime)));
         setPastEvents(past.sort((a, b) => getSafeDate(b.dateTime) - getSafeDate(a.dateTime)));
       } catch (error) {

@@ -147,10 +147,12 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 1rem; /* Add gap for spacing */
 }
 .footer-info {
     font-size: 0.875rem;
     color: #94a3b8;
+    text-align: left; /* Ensure alignment */
 }
 .footer-date { font-weight: 600; }
 .details-toggle-btn {
@@ -162,10 +164,33 @@
     border-radius: 0.5rem;
     cursor: pointer;
     transition: background-color 0.3s;
+    white-space: nowrap; /* Prevent wrapping */
 }
 .details-toggle-btn:hover {
     background-color: #1d4ed8;
 }
+
+/* --- ** NEW REGISTER BUTTON STYLES ** --- */
+.register-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-image: linear-gradient(to right, #22c55e, #16a34a);
+    color: white;
+    font-weight: 600;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 9999px; /* Pill shape */
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    white-space: nowrap; /* Prevent wrapping */
+}
+.register-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3);
+}
+
 
 /* --- Empty State & Skeleton --- */
 .empty-text { color: #94a3b8; text-align: center; padding: 2rem; background-color: #1e293b; border-radius: 0.5rem; border: 1px dashed #334155; }

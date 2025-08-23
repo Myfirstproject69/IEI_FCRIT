@@ -20,12 +20,14 @@ import ManageAbout from './ManageAbout';
 
 // --- SVG Icons ---
 const LogoutIcon = () => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>;
+const MenuIcon = () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>;
 
 export default function Dashboard() {
     const [user, setUser] = useState(null);
     const [userRole, setUserRole] = useState(null);
     const [loading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState('events');
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false); // **NEW STATE FOR MOBILE**
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -69,6 +71,11 @@ export default function Dashboard() {
 
     const superAdminItem = { id: 'adminManagement', label: 'Admin Management' };
 
+    const handleNavClick = (tabId) => {
+        setActiveTab(tabId);
+        setIsSidebarOpen(false); // Close sidebar on mobile after selection
+    };
+
     const renderContent = () => {
         switch (activeTab) {
             case 'events': return <ManageEvents />;
@@ -88,7 +95,8 @@ export default function Dashboard() {
     };
 
     return (
-        <div className="dashboard-layout">
+        <div className={`dashboard-layout ${isSidebarOpen ? 'sidebar-open' : ''}`}>
+            {isSidebarOpen && <div className="mobile-overlay" onClick={() => setIsSidebarOpen(false)}></div>}
             <aside className="sidebar">
                 <div className="sidebar-header">
                     <h1 className="sidebar-title">Admin Panel</h1>
@@ -98,7 +106,7 @@ export default function Dashboard() {
                         <button 
                             key={item.id}
                             className={`nav-button ${activeTab === item.id ? 'active' : ''}`} 
-                            onClick={() => setActiveTab(item.id)}
+                            onClick={() => handleNavClick(item.id)}
                         >
                             {item.label}
                         </button>
@@ -106,7 +114,7 @@ export default function Dashboard() {
                     {userRole === 'superadmin' && (
                         <button 
                             className={`nav-button super-admin ${activeTab === superAdminItem.id ? 'active' : ''}`} 
-                            onClick={() => setActiveTab(superAdminItem.id)}
+                            onClick={() => handleNavClick(superAdminItem.id)}
                         >
                             {superAdminItem.label}
                         </button>
@@ -123,9 +131,17 @@ export default function Dashboard() {
                     </button>
                 </div>
             </aside>
-            <main className="main-content-wrapper">
-                {renderContent()}
-            </main>
+            <div className="main-content-container">
+                <header className="mobile-header">
+                    <button onClick={() => setIsSidebarOpen(true)} className="menu-button">
+                        <MenuIcon />
+                    </button>
+                    <h1 className="mobile-header-title">Admin Panel</h1>
+                </header>
+                <main className="main-content-wrapper">
+                    {renderContent()}
+                </main>
+            </div>
         </div>
     );
 }
